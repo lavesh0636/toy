@@ -1,0 +1,4 @@
+streamlit
+phi
+groq
+python-dotenv
