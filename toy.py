@@ -20,9 +20,10 @@ def get_agent():
         tools=[GoogleSearch()],
         description="Expert Ayurvedic consultant specializing in Gupt Rog and sexual health",
         instructions=[
-            "Respond exclusively to Gupt Rog and Ayurvedic sexual health queries",
-            "Provide structured, markdown-formatted answers with practical solutions",
-            "Maintain professional and empathetic tone"
+            "Respond exclusively to Gupt Rog and Ayurvedic sexual health queries.",
+            "Provide structured, markdown-formatted answers with practical solutions.",
+            "Include detailed explanations, treatment options, and preventive measures.",
+            "Maintain a professional and empathetic tone."
         ],
         markdown=True
     )
@@ -36,7 +37,7 @@ def handle_query(query: str) -> str:
             response = agent.run(query)
             # Extract just the clean response content
             if response and response.content:
-                return response.content
+                return response.content.strip()  # Clean up whitespace
             return "No response generated"
         except groq.InternalServerError as e:
             if "503" in str(e) and attempt < max_retries:
@@ -55,7 +56,7 @@ def main():
         layout="centered"
     )
     
-    # Initialize session state
+    # Initialize session state for chat history
     if "history" not in st.session_state:
         st.session_state.history = []
 
@@ -70,40 +71,40 @@ def main():
     - Herbal remedies
     """)
 
-    # Conversation history
+    # Conversation history display
     for qa in st.session_state.history:
         with st.chat_message("user"):
             st.markdown(qa["question"])
         with st.chat_message("assistant"):
             st.markdown(qa["answer"])
 
-    # Query input
+    # Query input field
     query = st.chat_input("Ask your question about Gupt Rog...")
     
     if query:
-        # Basic relevance check
-        if not any(keyword in query.lower() for keyword in ["gupt rog", "sexual", "ayurved", "health", "treatment"]):
+        # Basic relevance check for keywords related to Gupt Rog
+        if not any(keyword in query.lower() for keyword in ["gupt rog", "sexual", "ayurved", "health","hidden diseases", "treatment"]):
             with st.chat_message("assistant"):
                 st.markdown("I specialize in Gupt Rog and Ayurvedic sexual health. Please ask related questions.")
             return
 
-        # Process query
+        # Process the user's query with enhanced context handling
         with st.spinner("Consulting Ayurvedic texts..."):
             response = handle_query(query)
         
-        # Store in history
+        # Store the question and response in history
         st.session_state.history.append({
             "question": query,
             "answer": response
         })
         
-        # Display new messages
+        # Display new messages in chat format
         with st.chat_message("user"):
             st.markdown(query)
         with st.chat_message("assistant"):
             st.markdown(response)
 
-    # Sidebar controls
+    # Sidebar controls for additional settings
     with st.sidebar:
         st.header("Settings")
         if st.button("Clear History"):
