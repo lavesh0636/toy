@@ -4,3 +4,4 @@ phidata
 groq
 python-dotenv
 googlesearch-python
+pycountry
