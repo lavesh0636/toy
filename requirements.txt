@@ -1,4 +1,5 @@
 streamlit
+phi
 phidata
 groq
 python-dotenv
