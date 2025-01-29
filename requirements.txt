@@ -3,3 +3,4 @@ phi
 phidata
 groq
 python-dotenv
+googlesearch-python
